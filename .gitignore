@@ -1,14 +1,97 @@
-# Large model files — too big for GitHub
+# ========================
+# 🚀 ML Model Files (IMPORTANT)
+# ========================
+*.pkl
+*.pt
+models/
+
+# Specific large models
 models/bert_base/
 models/bert_classifier.pt
 models/rf_model.pkl
 models/shap_values.pkl
 models/lstm_model.pt
 
-# Jupyter checkpoints
+# ========================
+# 🧠 Python Cache
+# ========================
+__pycache__/
+*.py[codz]
+*$py.class
+
+# ========================
+# 📓 Jupyter
+# ========================
 .ipynb_checkpoints/
 */.ipynb_checkpoints/
 
-# Python cache
-__pycache__/
-*.pyc
+# ========================
+# 📦 Distribution / Packaging
+# ========================
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ========================
+# 🧪 Testing / Coverage
+# ========================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# ========================
+# 🌍 Environments
+# ========================
+.env
+.envrc
+.venv
+venv/
+env/
+ENV/
+
+# ========================
+# 🧰 IDE / Tools
+# ========================
+.vscode/
+.idea/
+.spyderproject
+.spyproject
+
+# ========================
+# 📚 Logs / DB
+# ========================
+*.log
+db.sqlite3
+
+# ========================
+# 🧬 Type check / lint
+# ========================
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+
+# ========================
+# ⚙️ Misc
+# ========================
+.ipython/
+profile_default/
