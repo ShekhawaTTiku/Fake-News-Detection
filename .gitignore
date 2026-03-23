@@ -1,0 +1,14 @@
+# Large model files — too big for GitHub
+models/bert_base/
+models/bert_classifier.pt
+models/rf_model.pkl
+models/shap_values.pkl
+models/lstm_model.pt
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
