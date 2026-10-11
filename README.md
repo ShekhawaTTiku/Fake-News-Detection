@@ -1,137 +1,250 @@
-# NLP-Based Automated Fake News Detection
+<div align="center">
 
-A personal project building an end-to-end fake news detection system using Natural Language Processing (NLP) and Machine Learning on the LIAR2 dataset. It classifies real-world political statements as Fake or Real by combining text analysis with speaker credibility features.
+# 📰 Fake News Detection
 
-## 📌 Project Overview
-Most fake news datasets label full news articles as simply real or fake. This project uses **LIAR2**, a more realistic and challenging dataset containing:
-- Short real-world political claims sourced from PolitiFact.
-- A detailed justification written by human fact-checkers.
-- Speaker credibility history showing how often the speaker has been rated true, false, pants-on-fire, etc., in the past.
+### Comparing NLP Models on the LIAR2 Fact-Checking Dataset
 
-This combination allows the models to learn actual linguistic and contextual cues rather than relying on simple surface-level patterns.
+*Explore how text, fact-checker justifications, and speaker history affect binary claim classification with traditional machine learning, an LSTM, and BERT.*
 
-## 📊 Dataset (LIAR2)
-**Source:** [LIAR2 Repository](https://github.com/chengxuphd/liar2/tree/main/liar2)  
-**Format:** CSV files with 16 columns per row.  
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![scikit--learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-LSTM%20%26%20BERT-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Dataset](https://img.shields.io/badge/Dataset-LIAR2-4C8C4A?style=for-the-badge)](https://github.com/chengxuphd/liar2)
 
-**Label mapping (Binary Classification):**
-- **`0 = FAKE`** (Original labels: *pants-fire, false, barely-true*)
-- **`1 = REAL`** (Original labels: *half-true, mostly-true, true*)
+**[Overview](#-overview) · [Dataset](#-dataset-and-labels) · [Results](#-recorded-results) · [Setup](#-installation) · [Notebooks](#-notebook-workflow)**
 
-**Class Distribution:**
-| Split | Total Samples | Fake (0) | Real (1) |
-| :--- | :--- | :--- | :--- |
-| **Train** | 18,369 | 10,591 (58%) | 7,778 (42%) |
-| **Validation** | 2,297 | 1,325 (58%) | 972 (42%) |
-| **Test** | 2,296 | 1,323 (58%) | 973 (42%) |
+</div>
 
-## 🧠 Models & Performance
-Four models are implemented and compared. All models use **Weighted F1** as the primary metric due to the mild 58/42 class imbalance.
+---
 
-| Model | Type | Features | Test F1 Score |
-| :--- | :--- | :--- | :--- |
-| **SVM** | Traditional ML | TF-IDF + Credibility | 0.8684 |
-| **Random Forest** | Ensemble ML | TF-IDF + Credibility | 0.8588 |
-| **BiLSTM** | Deep Learning | Sequences + Credibility | 0.8521 |
-| **BERT** | Transformer | Raw Text + Credibility | **0.8830** |
+## ✨ Overview
 
-*Note: BERT achieves the best performance. SVM is a surprisingly strong baseline. The strong performance across all models (83-88% F1) is largely due to including the justification column as a feature. Most published results on LIAR use only the statement and achieve 60-70% accuracy.*
+This project studies binary classification of political claims using the **LIAR2** dataset. It compares a TF–IDF Support Vector Machine (SVM), Random Forest, bidirectional LSTM, and a BERT-based classifier. The traditional and LSTM pipeline combines text features with speaker-credibility ratios; the BERT notebook combines a text representation with credibility features.
 
-## ⚙️ Installation
-**Requirements:** Python 3.9, 3.10, or 3.11 is required. *(Python 3.12 and above are not supported).*
+The notebooks cover dataset exploration, preprocessing, model training, SHAP explanations for the SVM, and an interactive prediction demonstration.
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ShekhawaTTiku/Fake-News-Detection.git
-   cd Fake-News-Detection
-   ```
+| 🗞️ Input | 🧠 Models | 📊 Evaluation | 🔎 Interpretation |
+|:---:|:---:|:---:|:---:|
+| LIAR2 claim, justification, and speaker history | SVM, Random Forest, BiLSTM, and BERT | Weighted F1 and classification reports | SHAP feature analysis for the SVM |
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *Note: NLTK data is downloaded automatically when notebooks run. To download manually:*
-   `python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('omw-1.4')"`
+> **Important scope note:** LIAR2 includes justifications written by fact-checkers. Since this project uses the justification as an input feature, the reported scores do not describe a system that can verify a newly published claim before fact-checking. The model learns dataset labels; it does not establish whether a real-world statement is true.
 
-3. **Add the dataset files**
-   Place `train.csv`, `valid.csv`, and `test.csv` in the root project folder. Download them from the [LIAR2 repo](https://github.com/chengxuphd/liar2/tree/main/liar2).
+---
 
-## 🚀 Getting Started (Execution Order)
+## 🚀 Features
 
-Run the notebooks in this exact order:
+- 🧹 Text cleanup, lemmatization, stopword processing, and TF–IDF features.
+- 🗣️ Speaker-history credibility ratios joined to text features.
+- ⚖️ Comparison of classical, recurrent, and transformer-based models.
+- 🧪 A BERT fine-tuning notebook using `bert-base-uncased` and up to 256 tokens.
+- 🔍 SHAP analysis of SVM predictions and feature contributions.
+- 🖥️ A notebook demonstration for entering a claim and speaker-history values.
+- 📊 An optional exploratory data-study notebook.
 
-| Order | Notebook | Approx. Time |
-| :--- | :--- | :--- |
-| 1 | `Preprocessing , ML models (SVM and RF) and LSTM.ipynb` | ~15 min |
-| 2 | `BERT.ipynb` | ~20-30 min (GPU) / 3-5 hrs (CPU) |
-| 3 | `SHAP.ipynb` | ~60-75 min |
-| 4 | `demonstration.ipynb` | Instant |
+---
 
-## 📓 Notebook Details
-*   **Preprocessing, ML models (SVM and RF) and LSTM.ipynb:** The main notebook. Covers dataset loading, cleaning, computing speaker credibility ratios, text cleaning (lemmatization, stopword removal), TF-IDF vectorization (50,000 features), and training the SVM, RF, and BiLSTM models. Saves models to the `models/` folder.
-*   **BERT.ipynb:** Standalone fine-tuning notebook. Uses raw uncleaned text fed directly into the BERT WordPiece tokenizer (max 256 tokens). Fine-tunes `bert-base-uncased` with a custom hybrid classifier head that concatenates the CLS token output with speaker credibility ratios.
-*   **SHAP.ipynb:** Loads the trained SVM model and computes SHAP values for 200 test samples. Produces global feature importance charts showing which words drive predictions and how credibility features contribute.
-*   **demonstration.ipynb:** Interactive demo. Loads all models and runs predictions on custom inputs. Allows you to set `STATEMENT`, `JUSTIFICATION`, and speaker history counts to output predictions with confidence scores and a majority vote verdict.
-*   **Data Study.ipynb:** Exploratory data analysis and visualizations. Optional and independent.
+## 📋 Dataset and Labels
 
-## 🗂️ Project Files & Models Directory
-*   `train.csv`, `valid.csv`, `test.csv` — Datasets
-*   `models/svm_model.pkl` — Trained SVM model
-*   `models/tfidf_vectorizer.pkl` — Fitted TF-IDF vectorizer
-*   `models/robust_scaler.pkl` & `robust_scaler_bert.pkl` — Fitted RobustScalers
-*   `models/rf_model.pkl`, `lstm_model.pt`, `bert_classifier.pt` — *(Not Pushed — Retrain Required)*
-*   `models/shap_values.pkl` — *(Not Pushed — Recompute Required)*
+The project uses the [LIAR2 dataset](https://github.com/chengxuphd/liar2), derived from PolitiFact fact-checks. The repository includes `train.csv`, `valid.csv`, and `test.csv` in its root.
 
-## 🔄 Pipeline Summary
+The original six truthfulness ratings are collapsed into two labels:
+
+| Project label | Original LIAR2 ratings |
+|---|---|
+| `0` — **FAKE** | `pants-fire`, `false`, `barely-true` |
+| `1` — **REAL** | `half-true`, `mostly-true`, `true` |
+
+| Split | Samples | FAKE (`0`) | REAL (`1`) |
+|---|---:|---:|---:|
+| Train | 18,369 | 10,591 | 7,778 |
+| Validation | 2,297 | 1,325 | 972 |
+| Test | 2,296 | 1,323 | 973 |
+
+These labels are a simplified grouping of a graded rating scale. In particular, “REAL” does not mean independently verified as wholly true, and “FAKE” combines three different levels of falsity.
+
+---
+
+## 🔄 Modeling Pipeline
 
 ```text
-  Raw CSV data (train / valid / test)
-            |
-            v
-  Column cleanup + null handling
-            |
-            v
-  Binary labels (0=Fake, 1=Real)
-            |
-            v
-  Speaker credibility ratios + RobustScaler
-            |
-     -------+-------
-     |               |
-     v               v
-  Text cleaning    Raw text
-  (SVM/RF/LSTM)    (BERT)
-     |               |
-     v               v
-  TF-IDF          BERT tokenizer
-  50K features    max 256 tokens
-     |               |
-     v               v
-  hstack with      CLS output +
-  credibility      credibility
-  = 50,006 feat.   = 774 feat.
-     |               |
-     +-------+-------+
-             |
-             v
-     SVM / RF / LSTM / BERT
-             |
-             v
-     Fake or Real + confidence
-             |
-             v
-     SHAP explanation (SVM)
+LIAR2 train / validation / test CSV files
+                    │
+                    ▼
+       Clean columns and handle missing values
+                    │
+                    ▼
+    Map six ratings to FAKE (0) or REAL (1)
+                    │
+                    ▼
+       Derive speaker-history ratios
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+ Cleaned text               Raw text
+ TF–IDF (50K terms)          BERT tokenizer
+        │                       │
+ Join credibility data       CLS representation
+        │                       │
+ SVM / RF / BiLSTM          BERT + credibility
+        └───────────┬───────────┘
+                    ▼
+        Predicted dataset label and score
 ```
 
-## ⚠️ Known Issues
-*   **Python version:** Python 3.14+ is not compatible. Use 3.9, 3.10, or 3.11. Check this first if you see `scipy` or `torch` import errors.
-*   **SHAP computation time:** Takes 60-75 minutes on CPU for 200 samples. Do not interrupt; values save automatically.
-*   **BERT memory:** If you encounter an out-of-memory error on GPU, reduce `BATCH_SIZE` from 64 to 32 in `BERT.ipynb` Block 7.
-*   **PyTorch FutureWarning:** A warning about `torch.cuda.amp.autocast` may appear during BERT training. It is cosmetic.
-*   **Model loading in demo:** The `LSTMClassifier` and `BertHybridClassifier` classes must be defined (Block 2) before loading model weights in `demonstration.ipynb`.
+The TF–IDF pipeline uses up to **50,000 features** with unigrams and bigrams, then appends speaker-credibility values. The BERT notebook tokenizes raw text to a maximum of **256 tokens** and combines the text representation with credibility features.
+
+---
+
+## 📊 Recorded Results
+
+The current project summary reports the following **test weighted F1** scores:
+
+| Model | Feature approach | Reported test weighted F1 |
+|---|---|---:|
+| SVM | TF–IDF + speaker credibility | **0.8684** |
+| Random Forest | TF–IDF + speaker credibility | **0.8588** |
+| BiLSTM | Token sequences + speaker credibility | **0.8521** |
+| BERT | BERT text representation + speaker credibility | **0.8830** |
+
+These are project-recorded results, not newly reproduced benchmarks. The notebook also prints split-specific classification reports; compare the test reports when evaluating a run. The use of fact-checker justifications is a major limitation when interpreting these figures.
+
+---
+
+## ⚙️ Requirements
+
+Use **Python 3.9–3.11** as noted by the project. The repository does not currently include a pinned `requirements.txt`; install the notebook dependencies in your environment as needed:
+
+```bash
+python -m pip install jupyter pandas numpy scipy scikit-learn nltk matplotlib seaborn shap torch transformers
+```
+
+The BERT notebook may need a GPU for practical fine-tuning time. It can run on CPU, but training may take several hours. Notebook cells may download NLTK resources such as stopwords and WordNet data when first run.
+
+---
+
+## 📦 Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/ShekhawaTTiku/Fake-News-Detection.git
+cd Fake-News-Detection
+```
+
+### 2. Create an Environment and Install Dependencies
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment, then run the installation command from [Requirements](#-requirements). In Windows PowerShell, activate with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Run the Notebooks
+
+Start Jupyter from the repository root:
+
+```bash
+jupyter lab
+```
+
+Keep the three CSV files in the repository root so the notebook paths resolve.
+
+---
+
+## ▶️ Notebook Workflow
+
+| Order | Notebook | Purpose |
+|---:|---|---|
+| 1 | `Preprocessing , ML models (SVM and RF) and LSTM.ipynb` | Main pipeline: inspect data, preprocess text, derive speaker features, train SVM, Random Forest, and BiLSTM. |
+| 2 | `BERT.ipynb` | Fine-tune the BERT hybrid classifier on raw claim/justification text and speaker features. |
+| 3 | `SHAP.ipynb` | Explain the SVM feature contributions on a sample of test data. |
+| 4 | `demonstration.ipynb` | Try model predictions on manually supplied inputs. |
+| Optional | `Data Study.ipynb` | Independent exploratory analysis and visualizations. |
+
+Training notebooks save artifacts under `models/`. These generated model files are not included in the repository checkout, so run the relevant training notebook before using the demonstration notebook or SHAP analysis. The demonstration expects the model classes to be defined before loading the saved LSTM and BERT weights.
+
+---
+
+## 📁 Project Structure
+
+```text
+Fake-News-Detection/
+├── README.md
+├── train.csv
+├── valid.csv
+├── test.csv
+├── Preprocessing , ML models (SVM and RF) and LSTM.ipynb
+├── BERT.ipynb
+├── SHAP.ipynb
+├── demonstration.ipynb
+├── Data Study.ipynb
+└── models/                         # Created by training notebooks; not committed
+```
+
+---
+
+## ⚠️ Limitations
+
+| Area | Limitation |
+|---|---|
+| Input timing | Fact-checker justification is used as an input, so the approach is not a pre-publication or breaking-news detector. |
+| Label meaning | Two classes merge six graded truthfulness labels and should not be read as ground-truth truth/false judgments. |
+| Dataset scope | Results reflect LIAR2 and its source conventions; they may not generalize to other topics, languages, platforms, or time periods. |
+| Reproducibility | Dependency versions and random seeds are not consistently captured in a project requirements lockfile. |
+| Artifacts | Trained models and SHAP outputs are generated locally and are not provided in this checkout. |
+| Interpretation | SHAP explains model behavior for the selected features; it does not establish factual correctness or causation. |
+
+---
+
+## 🛣️ Future Improvements
+
+- 🧪 Add a pinned environment file and record notebook/runtime versions.
+- 🔁 Make preprocessing, label mapping, and evaluation reproducible in reusable scripts.
+- 🧾 Compare a statement-only setup separately from the justification-assisted setup.
+- 📉 Report per-class precision, recall, confusion matrices, and calibration alongside weighted F1.
+- 📦 Provide downloadable model artifacts or a lightweight inference entry point.
+- 🧭 Evaluate on external datasets and later claims to assess distribution shift.
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| **Python / Jupyter** | Notebook-based data exploration and experiments |
+| **pandas / NumPy / SciPy** | Tabular processing and sparse feature assembly |
+| **scikit-learn** | TF–IDF, SVM, Random Forest, preprocessing, and evaluation |
+| **PyTorch** | BiLSTM and BERT model training |
+| **Hugging Face Transformers** | BERT tokenizer and pretrained model components |
+| **NLTK** | Token/text preprocessing resources |
+| **SHAP** | SVM feature explanations |
+| **Matplotlib / Seaborn** | Notebook visualizations |
+
+---
 
 ## 📚 References
-*   [LIAR2 Dataset](https://github.com/chengxuphd/liar2)
-*   [BERT (Hugging Face)](https://huggingface.co/bert-base-uncased)
-*   [SHAP](https://github.com/slundberg/shap)
-*   [Fake News Survey](https://dl.acm.org/doi/10.1145/3395046)
+
+- [LIAR2 dataset repository](https://github.com/chengxuphd/liar2)
+- [BERT base uncased model](https://huggingface.co/bert-base-uncased)
+- [SHAP](https://github.com/slundberg/shap)
+- [Survey of fake-news detection research](https://dl.acm.org/doi/10.1145/3395046)
+
+---
+
+## 👤 Maintainer
+
+**Digvijay Singh Shekhawat**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@ShekhawaTTiku-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ShekhawaTTiku)
+
+---
+
+<div align="center">
+
+*An educational NLP experiment on fact-checked political claims.*
+
+</div>
